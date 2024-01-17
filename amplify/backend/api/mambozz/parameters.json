@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "mambozz",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authmambozz1e3582dc1e3582dc",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

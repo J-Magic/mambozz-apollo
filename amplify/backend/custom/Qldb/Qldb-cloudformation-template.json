@@ -1,0 +1,35 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "QLDBLedger": {
+      "Type": "AWS::QLDB::Ledger",
+      "Properties": {
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              "Bank-of-Chamas-",
+              {
+                "Ref": "env"
+              }
+            ]
+          ]
+        },
+        "DeletionProtection": false,
+        "PermissionsMode": "STANDARD",
+        "Tags": [
+          {
+            "Key": "name",
+            "Value": "Bank-of-Chamas"
+          }
+        ]
+      }
+    }
+  },
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"10.8.1\",\"stackType\":\"custom-customCloudformation\",\"metadata\":{}}"
+}

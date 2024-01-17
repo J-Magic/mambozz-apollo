@@ -1,0 +1,353 @@
+type User
+  @model
+  @auth(
+    rules: [
+      { allow: private, operations: [read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  username: String!
+  phoneNumber: String! @index(name: "byPhoneNumber")
+  numbers: [Contact] @hasMany
+  email: String
+  chatStatus: String
+  chatImage: String
+  imageKey: String
+  chatMessages: [ChatMessage] @hasMany(indexName: "byUser", fields: ["id"])
+  chatRooms: [ChatRoom] @manyToMany(relationName: "ChatRoomUsers")
+  lastOnlineAt: AWSTimestamp
+  adminRightsId: ID @index(name: "byAdminRights")
+  publicKey: String
+}
+
+type Individual_User {
+  ID: ID
+  UserID: ID!
+  currentBalance: Float
+  transactions: [Transactions]
+  chamas: [Group_User]
+  loans: [Loan]
+  paidLoans: Int
+  activeLoans: Int
+  nonPerformingLoans: Int
+  lateLoanInstallmentRepayments: Int
+  loanRating: Float
+  loanRepayments: [Loan_Repayment]
+  purchases: [Purchase]
+  businesses: [Business_User]
+}
+
+type Group_User {
+  GroupID: ID!
+  groupName: String
+  groupMembers: [User]
+  currentBalance: Float
+  transactions: [Transactions]
+  approvedLoanKitty: Float
+  approvedInvestmentKitty: Float
+  loansDisbursed: [Loan]
+  paidLoans: Int
+  activeLoans: Int
+  nonPerformingLoans: Int
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Business_User {
+  BusinessID: ID!
+  businessName: String
+  ownerUserId: ID
+  currentBalance: Float
+  transactions: [Transactions]
+  purchases: [Purchase]
+  sales: [Sale]
+  inventory: [Inventory]
+  loans: [Loan]
+  paidLoans: Int
+  activeLoans: Int
+  nonPerformingLoans: Int
+  lateLoanInstallmentRepayments: Int
+  loanRating: Float
+  loanRepayments: [Loan_Repayment]
+}
+
+type Transactions {
+  TransactionID: ID!
+  category: TransactionCategory
+  type: TransactionType
+  transactionExecutorId: ID!
+  transactionAmount: Float
+  currency: CurrencyType
+  forUserId: ID!
+  createdAt: AWSDateTime!
+  status: TransactionStatus
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  MAKEPAYMENT
+  RECIEVEPAYMENT
+  SENDMONEY
+  RECIEVEMONEY
+  LOANPAYMENT
+  LOANDISBURSEMENT
+}
+
+enum TransactionCategory {
+  GROUP
+  INDIVIDUAL
+  BUSINESS
+}
+
+enum CurrencyType {
+  KSH
+  DOLLAR
+  POUND
+  EURO
+}
+
+enum TransactionStatus {
+  COMPLETED
+  NOTCOMPLETED
+  REFUNDED
+}
+
+type Loan {
+  LoanID: ID!
+  loaneeID: ID!
+  category: LoanCategory
+  amountLoaned: Float
+  currency: CurrencyType
+  loanDisbursementDate: AWSDateTime!
+  interestRate: Float
+  loanPeriod: Int
+  totalInterestPayable: Float
+  totalLoanPayable: Float
+  installments: Int
+  installmentAmount: Float
+  installmentPaymentDate: AWSDateTime
+  latePayments: Int
+  totalPaidtoDate: AWSDateTime
+  percentagePaidtoDate: AWSDateTime
+  repayments: [Loan_Repayment]
+  loanDueDate: AWSDateTime
+  fullyPaid: Boolean
+  defaulted: Boolean
+  actualAmountPaidonCompletion: Float
+  status: LoanStatus
+}
+
+enum LoanCategory {
+  GROUP
+  INDIVIDUAL
+  BUSINESS
+}
+
+enum LoanStatus {
+  ACTIVE
+  PAID
+  NONPERFORMINGLOAN
+}
+
+type Loan_Repayment {
+  LoanRepaymentID: ID!
+  loanId: ID!
+  loaneeId: ID!
+  transactionID: ID!
+  installmentDate: AWSDateTime
+  installmentAmount: Float
+  paymentAmount: Float
+  paymentDate: AWSDateTime
+  installmentBalance: Float
+}
+
+type Investment {
+  InvestmentID: ID!
+  investorId: ID
+  category: InvestmentCategory
+  currency: CurrencyType
+  principal: Float
+  investmentPeriodMnths: Int
+  interestRate: Float
+  interestAmount: Float
+  noOfPayments: Int
+  maturityDate: AWSDateTime
+  totalPayback: Float
+  singlePaymentValue: Float
+  fullyPaid: Boolean
+  TotalPaymentOnMaturity: Float
+  investorPaid: Boolean
+  penaltyOnEarlyWithdrawalinPercentage: Float
+  remarks: String
+  status: InvestmentStatus
+  payments: [Investment_Returns_Payment]
+}
+
+type Investment_Returns_Payment {
+  InvestmentRepaymentID: ID
+  investmentId: ID
+  investorId: ID
+  transactionId: ID
+  maturityDate: AWSDateTime
+  totalPaymentExpected: Float
+  interestExpected: Float
+  paidAmount: Float
+  paymentBalance: Float
+  remarks: String
+}
+
+enum InvestmentCategory {
+  GROUP
+  INDIVIDUAL
+  BUSINESS
+}
+
+enum InvestmentStatus {
+  ACTIVE
+  NONPERFORMINGINVESTMENT
+  FULLYPAID
+}
+
+type Purchase {
+  PurchaseID: ID
+  itemName: String
+  quantity: Float
+  unitPrice: Float
+  currency: CurrencyType
+  BusinessID: ID
+  paymentStatus: TransactionStatus
+  TransactionSettled: Boolean
+}
+type Sale {
+  SaleID: ID
+  itemName: String
+  quantity: Float
+  unitPrice: Float
+  currency: CurrencyType
+  BusinessID: ID
+  paymentStatus: TransactionStatus
+  TransactionSettled: Boolean
+}
+type Inventory {
+  InventoryID: ID
+  categoryName: String
+  subCategoryName: String
+  itemName: String
+  currentStock: Float
+  unsettledOrders: Float
+  unitSalePrice: Float
+  currency: CurrencyType
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type Contact @model @auth(rules: [{ allow: owner }]) {
+  number: ID! @primaryKey
+}
+
+type AdminRights
+  @model
+  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
+  id: ID!
+  chatRoom: ChatRoom @hasOne
+  Users: [User] @hasMany(indexName: "byAdminRights", fields: ["id"])
+}
+
+type ChatMessage
+  @model
+  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
+  id: ID!
+  createdAt: AWSDateTime!
+  type: MessageType
+  text: String
+  userId: ID! @index(name: "byUser")
+  chatRoomId: ID!
+    @index(
+      name: "byChatRoom"
+      sortKeyFields: ["createdAt"]
+      queryField: "listChatMessagesByChatRoom"
+    )
+  chatAttachments: [ChatAttachment]
+    @hasMany(indexName: "byChatMessage", fields: ["id"])
+  status: MessageStatus
+  replyToMessageID: ID
+  forUserId: ID
+}
+
+enum MessageType {
+  TEXT
+  AUDIO
+  CHAMAMSG
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+type ChatAttachment
+  @model
+  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
+  id: ID!
+  chatMessageID: ID @index(name: "byChatMessage")
+  chatRoomID: ID @index(name: "byChatRoom")
+  storageKey: String!
+  type: AttachmentType!
+  width: Int
+  height: Int
+  duration: Int
+}
+enum AttachmentType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+type ChatRoom
+  @model
+  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
+  id: ID!
+  chatRoomId: ID
+  adminRightsId: ID
+  name: String
+  image: String
+  users: [User] @manyToMany(relationName: "ChatRoomUsers")
+  chatMessages: [ChatMessage] @hasMany(indexName: "byChatRoom", fields: ["id"])
+  newMessages: Int
+  lastMessage: ChatMessage @hasOne
+  chatAttachments: [ChatAttachment]
+    @hasMany(indexName: "byChatRoom", fields: ["id"])
+}
+input contactsInput {
+  number: ID!
+}
+
+type Mutation {
+  createIndividualUserAccount(UserID: ID!): Individual_User
+    @auth(rules: [{ allow: private }])
+    @function(name: "createIndividualUserAccount-${env}")
+}
+
+type Query {
+  getUsersByNumbers(numbers: [contactsInput]!): [User]
+    @auth(rules: [{ allow: private }])
+    @function(name: "getUsersByNumbersFunction-${env}")
+
+  getIndividual_User(UserID: ID!): Individual_User
+    @auth(rules: [{ allow: private }])
+    @function(name: "QldbAppsyncDataSource-${env}")
+}
+type Subscription {
+  onUpdateChatroomByChatroomId(chatRoomId: ID!): ChatRoom
+    @aws_subscribe(mutations: ["updateChatRoom"])
+
+  onCreateNewChatMessageByChatroomId(chatRoomId: ID!): ChatMessage
+    @aws_subscribe(mutations: ["createChatMessage"])
+}
+
+schema {
+  query: Query
+  subscription: Subscription
+}

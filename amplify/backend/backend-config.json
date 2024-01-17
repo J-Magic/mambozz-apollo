@@ -1,0 +1,173 @@
+{
+  "api": {
+    "mambozz": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "mambozz1e3582dc1e3582dc"
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authmambozz1e3582dc1e3582dc"
+            }
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "auth": {
+    "mambozz1e3582dc1e3582dc": {
+      "customAuth": false,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "mambozz1e3582dc1e3582dcPostConfirmation",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "custom": {
+    "Qldb": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "customCloudformation"
+    },
+    "usercontactsq1114215": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "customCloudformation"
+    }
+  },
+  "function": {
+    "QldbAppsyncDataSource": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "createIndividualUserAccount": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "getUsersByNumbersFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "mambozz1e3582dc1e3582dcPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_QldbAppsyncDataSource_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "QldbAppsyncDataSource"
+        }
+      ]
+    },
+    "AMPLIFY_function_QldbAppsyncDataSource_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "QldbAppsyncDataSource"
+        }
+      ]
+    },
+    "AMPLIFY_function_createIndividualUserAccount_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createIndividualUserAccount"
+        }
+      ]
+    },
+    "AMPLIFY_function_createIndividualUserAccount_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createIndividualUserAccount"
+        }
+      ]
+    },
+    "AMPLIFY_function_getUsersByNumbersFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getUsersByNumbersFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_getUsersByNumbersFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getUsersByNumbersFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_mambozz1e3582dc1e3582dcPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mambozz1e3582dc1e3582dcPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mambozz1e3582dc1e3582dcPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mambozz1e3582dc1e3582dcPostConfirmation"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "s38a594a02": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
+}

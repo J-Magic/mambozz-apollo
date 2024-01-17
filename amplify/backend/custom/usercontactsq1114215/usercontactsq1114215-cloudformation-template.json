@@ -1,0 +1,73 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "SQS": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": {
+          "Fn::Join": [
+            "",
+            [
+              "usercontactsq1114215",
+              {
+                "Ref": "env"
+              },
+              ".fifo"
+            ]
+          ]
+        },
+        "FifoQueue": true,
+        "ContentBasedDeduplication": true
+      }
+    },
+
+    "SQSPolicy": {
+      "Type": "AWS::SQS::QueuePolicy",
+      "Properties": {
+        "Queues": [
+          "https://sqs.eu-central-1.amazonaws.com/305892006942/usercontactsq1114215dev.fifo"
+        ],
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": ["305892006942"]
+              },
+              "Action": [
+                "sqs:SendMessage",
+                "sqs:ReceiveMessage",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes"
+              ],
+              "Resource": "arn:aws:sqs:eu-central-1:305892006942:usercontactsq1114215dev.fifo"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "Name": {
+      "Value": {
+        "Ref": "SQS"
+      }
+    },
+    "Arn": {
+      "Value": {
+        "Fn::GetAtt": ["SQS", "Arn"]
+      }
+    },
+    "Region": {
+      "Value": {
+        "Ref": "AWS::Region"
+      }
+    }
+  },
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"11.0.3\",\"stackType\":\"custom-customCloudformation\",\"metadata\":{}}"
+}

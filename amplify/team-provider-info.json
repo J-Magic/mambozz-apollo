@@ -1,0 +1,42 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mambozz-dev-143338-authRole",
+      "UnauthRoleArn": "arn:aws:iam::305892006942:role/amplify-mambozz-dev-143338-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::305892006942:role/amplify-mambozz-dev-143338-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-mambozz-dev-143338-deployment",
+      "UnauthRoleName": "amplify-mambozz-dev-143338-unauthRole",
+      "StackName": "amplify-mambozz-dev-143338",
+      "StackId": "arn:aws:cloudformation:eu-central-1:305892006942:stack/amplify-mambozz-dev-143338/0afa1c10-5ebc-11ee-a7a9-0ae65b08dd7d",
+      "AmplifyAppId": "d2le5z1qhg9caf",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mambozz-dev-143338-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "mambozz1e3582dc1e3582dc": {}
+      },
+      "function": {
+        "QldbAppsyncDataSource": {
+          "deploymentBucketName": "amplify-mambozz-dev-143338-deployment",
+          "s3Key": "amplify-builds/QldbAppsyncDataSource-4b636e4c6c624f73364c-build.zip"
+        },
+        "createIndividualUserAccount": {
+          "deploymentBucketName": "amplify-mambozz-dev-143338-deployment",
+          "s3Key": "amplify-builds/createIndividualUserAccount-486f367a2f32754f4b38-build.zip"
+        },
+        "getUsersByNumbersFunction": {
+          "deploymentBucketName": "amplify-mambozz-dev-143338-deployment",
+          "s3Key": "amplify-builds/getUsersByNumbersFunction-2f62426d57634c637852-build.zip"
+        },
+        "mambozz1e3582dc1e3582dcPostConfirmation": {
+          "deploymentBucketName": "amplify-mambozz-dev-143338-deployment",
+          "s3Key": "amplify-builds/mambozz1e3582dc1e3582dcPostConfirmation-58533945632f45585432-build.zip"
+        }
+      },
+      "storage": {
+        "s38a594a02": {}
+      }
+    }
+  }
+}
